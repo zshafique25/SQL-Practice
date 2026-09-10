@@ -1,9 +1,17 @@
 /* Level 1 */
-
+use SalesDB;
+select * from Sales.Employees;
 /*
 1 Write a query to find the second highest salary in an employee table.
 */
-
+with cte as (
+select *,
+ROW_NUMBER() over(order by salary desc) as rn
+from Sales.Employees
+)
+select Salary as second_highest_salary 
+from cte
+where rn = 2;
 
 /*
 2 Fetch all employees whose names contain the letter "a" exactly twice.
