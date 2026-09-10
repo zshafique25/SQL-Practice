@@ -35,7 +35,14 @@ where len(FullName) - LEN(lower(REPLACE(FullName, 'a', ''))) = 2;
 /*
 3 How do you retrieve only duplicate records from a table?
 */
-
+with cte as (
+select *,
+ROW_NUMBER() over(partition by EmployeeID order by EmployeeID) as rn
+from Sales.Employees
+)
+select * 
+from cte
+where rn <> 1;
 
 
 /*
@@ -60,26 +67,46 @@ where Salary >= avg_salary;
 /*
 6 Write a query to find the most frequently occurring value in a column.
 */
-
+with cte as (
+select Sales, COUNT(Sales) as count_sales
+from Sales.Orders
+group by Sales
+)
+select Sales 
+from cte 
+where count_sales = (select MAX(count_sales) from cte);
 
 /*
 7 Fetch records where the date is within the last 7 days from today.
 */
 
+select * from Sales.Orders
+where DATEDIFF(D,CreationTime, GETDATE()) = 7;
+
+select * from Sales.Orders
+where CreationTime between GETDATE()-7 and GETDATE();
+
 /*
 8 Write a query to count how many employees share the same salary.
 */
-
+select Salary, COUNT(EmployeeID) as total_employees
+from Sales.Employees
+group by Salary
+having COUNT(EmployeeID) > 1;
 
 /*
 9 How do you fetch the top 3 records for each group in a table?
 */
-
+select * from Sales.Orders;
 
 /*
 10 Retrieve products that were never sold
 */
-
+select p.ProductID, p.Product, p.Category, p.Price
+from Sales.Orders as o
+right join Sales.Products as p
+on o.ProductID = p.ProductID
+where o.OrderID is null;
 
 
 
