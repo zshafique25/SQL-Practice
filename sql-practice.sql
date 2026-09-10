@@ -16,8 +16,21 @@ where rn = 2;
 /*
 2 Fetch all employees whose names contain the letter "a" exactly twice.
 */
+with cte as (
+select *, CONCAT(FirstName, ' ', LastName) as FullName 
+from Sales.Employees
+)
+select FullName 
+from cte
+where FullName like '%a%a%' and FullName not like '%a%a%a%';
 
-
+with cte as (
+select *, CONCAT(FirstName, ' ', LastName) as FullName 
+from Sales.Employees
+)
+select FullName 
+from cte
+where len(FullName) - LEN(lower(REPLACE(FullName, 'a', ''))) = 2;
 
 /*
 3 How do you retrieve only duplicate records from a table?
@@ -28,14 +41,16 @@ where rn = 2;
 /*
 4 Write a query to calculate the running total of sales by date.
 */
-
-
-
+select *,
+SUM(sales) over(order by OrderDate rows between unbounded preceding and current row) as running_total
+from Sales.Orders;
 
 /*
 5 Find employees who earn more than the average salary in their department.
 */
-
+select *,
+AVG(Salary) over(partition by Department) as avg_salary
+from Sales.Employees;
 
 /*
 6 Write a query to find the most frequently occurring value in a column.
