@@ -97,8 +97,21 @@ having COUNT(EmployeeID) > 1;
 /*
 9 How do you fetch the top 3 records for each group in a table?
 */
-select * from Sales.Orders;
-
+with ranked_sales as (
+select o.OrderID,
+        o.ProductID,
+        o.Sales,
+        p.Category,
+        p.Product,
+dense_rank() over(partition by p.Category order by o.Sales desc) as sales_rank
+from Sales.Orders as o
+left join Sales.Products as p
+on o.ProductID = p.ProductID
+)
+select * from ranked_sales
+where sales_rank <=3 
+order by Category, sales_rank;
+ 
 /*
 10 Retrieve products that were never sold
 */
