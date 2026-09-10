@@ -48,9 +48,14 @@ from Sales.Orders;
 /*
 5 Find employees who earn more than the average salary in their department.
 */
+with cte as (
 select *,
 AVG(Salary) over(partition by Department) as avg_salary
-from Sales.Employees;
+from Sales.Employees
+)
+select * 
+from cte
+where Salary >= avg_salary;
 
 /*
 6 Write a query to find the most frequently occurring value in a column.
