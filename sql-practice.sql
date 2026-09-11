@@ -121,8 +121,6 @@ right join Sales.Products as p
 on o.ProductID = p.ProductID
 where o.OrderID is null;
 
-
-
 /* Level 2 */
 
 /*
@@ -139,7 +137,6 @@ left join Sales.Customers as c
 on o.CustomerID = c.CustomerID
 where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 
-
 /*
 2 How do you pivot a table to convert rows in columns?
 */
@@ -153,12 +150,22 @@ sum(salary)
 for department in (Marketing, Sales, Hr)
 ) as pivot_table;
 
-
-
 /*
 3 Write a query to calculate the percentage change in sales month-over-month.
 */
-
+with cte as (
+select MONTH(OrderDate) as Month_name, SUM(Sales) as total_sales
+from Sales.Orders
+group by MONTH(OrderDate)
+),
+cte1 as (
+select *,
+Lag(total_sales) over(order by Month_name) as previous_month_sales
+from cte
+)
+select *,
+Round(((total_sales - previous_month_sales) * 100) / (nullif(previous_month_sales, 0)), 2) as percent_change
+from cte1;
 
 
 
