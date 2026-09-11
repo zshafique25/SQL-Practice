@@ -158,15 +158,18 @@ where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 4 Find the median salary of employees in a table.
 */
 with cte as (
-select * 
+select * ,
+ROW_NUMBER() over (order by Salary) as rn,
+count(*) over() as total_counts
 from Sales.Employees
-order by Salary
+),
+cte1 as (
+select salary 
+from cte 
+where rn in ((total_counts+1)/2, (total_counts+2)/2) 
 )
-select 
-case
-when COUNT(EmployeeID) % 2 = 0 Then 
-from cte;
-
+select AVG(salary) as median_salary
+from cte1;
 
 
 /*
