@@ -128,7 +128,16 @@ where o.OrderID is null;
 /*
 1 Retrieve customers who made their first purchase in the last 6 months.
 */
-
+with cte as (
+select CustomerID, MIN(OrderDate) as FirstOrderDate
+from Sales.Orders
+group by CustomerID
+)
+select * 
+from cte as o
+left join Sales.Customers as c
+on o.CustomerID = c.CustomerID
+where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 
 
 /*
