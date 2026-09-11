@@ -140,6 +140,8 @@ where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 /*
 2 How do you pivot a table to convert rows in columns?
 */
+select EmployeeID, FirstName, department, salary
+from (
 select EmployeeID, FirstName, Marketing, Sales, Hr , Gender
 from (
 select * 
@@ -148,7 +150,12 @@ from Sales.Employees
 pivot (
 sum(salary)
 for department in (Marketing, Sales, Hr)
-) as pivot_table;
+) as pivot_table
+) as p
+unpivot (
+salary
+for department in (Marketing, Sales, Hr)
+) as unpivot_table;
 
 /*
 3 Write a query to calculate the percentage change in sales month-over-month.
