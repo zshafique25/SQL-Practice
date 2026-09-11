@@ -157,7 +157,15 @@ where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 /*
 4 Find the median salary of employees in a table.
 */
-
+with cte as (
+select * 
+from Sales.Employees
+order by Salary
+)
+select 
+case
+when COUNT(EmployeeID) % 2 = 0 Then 
+from cte;
 
 
 
