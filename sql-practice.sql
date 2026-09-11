@@ -143,7 +143,15 @@ where o.FirstOrderDate >= DATEADD(MONTH, -6, GETDATE());
 /*
 2 How do you pivot a table to convert rows in columns?
 */
-
+select EmployeeID, FirstName, Marketing, Sales, Hr , Gender
+from (
+select * 
+from Sales.Employees
+) as source_table
+pivot (
+sum(salary)
+for department in (Marketing, Sales, Hr)
+) as pivot_table;
 
 
 
@@ -170,7 +178,6 @@ where rn in ((total_counts+1)/2, (total_counts+2)/2)
 )
 select AVG(salary) as median_salary
 from cte1;
-
 
 /*
 5 Fetch all users who logged in consecutively for 3 days or more.
