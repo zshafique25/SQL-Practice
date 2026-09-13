@@ -287,3 +287,22 @@ where rn > 1;
 /*
 5 Retrieve customers who made purchases across at least three different categories.
 */
+
+
+
+
+
+
+select ProductID, Product, Category, Price
+from (
+select ProductID, Product, Accessories, Clothing
+from (select * from Sales.Products) as source_table
+pivot (
+sum(Price)
+for Category in (Accessories, Clothing)
+) as pivot_table
+) as p
+unpivot (
+Price
+for Category in (Accessories, Clothing)
+) as unpivot_table;
