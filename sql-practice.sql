@@ -212,11 +212,16 @@ from consecutivegroups
 group by CustomerID, streakgroup
 having COUNT(*) >= 3;
 
-
 /*
 6 Write a query to delete duplicate rows while keeping one occurrence.
 */
-
+with deleteduplicates as (
+select *,
+ROW_NUMBER() over (partition by OrderID order by OrderID) as rn
+from Sales.Orders
+)
+delete from deleteduplicates
+where rn > 1;
 
 
 /*
