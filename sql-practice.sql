@@ -197,6 +197,20 @@ from cte1;
 5 Fetch all users who logged in consecutively for 3 days or more.
 */
 
+with cte as (
+select distinct CustomerID,
+CAST(CreationTime AS date) as orderdate
+from Sales.Orders
+),
+consecutivegroups as (
+select *,  
+DATEADD(day, -ROW_NUMBER() over(partition by CustomerID order by orderdate), orderdate) as streakgroup
+from cte
+)
+select distinct CustomerID
+from consecutivegroups
+group by CustomerID, streakgroup
+having COUNT(*) >= 3;
 
 
 /*
