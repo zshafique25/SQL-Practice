@@ -263,7 +263,21 @@ select SUM(sales) as total_sales from cte where Category='Clothing'
 /*
 10 Split a comma-separated string into individual rows using SQL.
 */
+with cte as (
+select 'Department' as DEPT,
+'SEECS, NBS, SMME' as DEPT_NAMES
+)
+select DEPT, d.value
+FROM cte
+cross apply string_split(DEPT_NAMES, ',') AS d;
 
+with cte as (
+select 'Department' as DEPT,
+'SEECS, NBS, SMME' as DEPT_NAMES
+)
+SELECT value
+from string_split((select DEPT_NAMES FROM cte), ',', 1)
+where ordinal = 2
 
 /* Advanced Problem-Solving*/
 
