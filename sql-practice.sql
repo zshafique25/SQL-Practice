@@ -227,8 +227,13 @@ where rn > 1;
 /*
 7 Create a query to calculate the ratio of sales between two categories.
 */
-
-
+select o.ProductID,
+p.Product,
+p.Category,
+o.Sales
+from Sales.Orders as o
+left join Sales.Products as p
+on o.ProductID = p.ProductID;
 
 /*
 8 How would you implement a recursive query to generate a hierarchical structure?
