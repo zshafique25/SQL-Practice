@@ -227,13 +227,23 @@ where rn > 1;
 /*
 7 Create a query to calculate the ratio of sales between two categories.
 */
+with cte as (
 select o.ProductID,
 p.Product,
 p.Category,
 o.Sales
 from Sales.Orders as o
 left join Sales.Products as p
-on o.ProductID = p.ProductID;
+on o.ProductID = p.ProductID
+)
+select (a.total_sales * 1.0 / b.total_sales) as sales_ratio
+from (
+select SUM(sales) as total_sales from cte where Category='Accessories'
+) as a
+CROSS JOIN
+(
+select SUM(sales) as total_sales from cte where Category='Clothing'
+) as b;
 
 /*
 8 How would you implement a recursive query to generate a hierarchical structure?
