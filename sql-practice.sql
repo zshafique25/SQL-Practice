@@ -248,16 +248,36 @@ select SUM(sales) as total_sales from cte where Category='Clothing'
 /*
 8 How would you implement a recursive query to generate a hierarchical structure?
 */
-
-
+with cte as (
+select EmployeeID,
+FirstName,
+ManagerID,
+1 as level
+from Sales.Employees
+where ManagerID is Null
+UNION ALL
+select e.EmployeeID,
+e.FirstName ,
+e.ManagerID ,
+level + 1
+from Sales.Employees as e
+inner join cte as c
+on e.ManagerID = c.EmployeeID
+)
+select *
+from cte;
 
 
 /*
 9 Write a query to find gaps in sequential numbering within a table.
 */
-
-
-
+select OrderID, next_orderid
+from (
+select OrderID,
+LEAD(OrderID) over (order by OrderID) as next_orderid
+from Sales.Orders
+) as p
+where next_orderid - OrderID > 1;
 
 
 /*
