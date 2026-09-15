@@ -304,11 +304,23 @@ where ordinal = 2
 /*
 1 Rank products by sales in descending order for each region.
 */
+select *,
+DENSE_RANK() over(partition by CustomerID order by total_sales desc) as rn
+from (
+select ProductID, CustomerID,
+SUM(Sales) as total_sales
+from Sales.Orders
+group by ProductID, CustomerID
+) as p;
 
-
-
-
-
+select *,
+DENSE_RANK() over(partition by Region order by total_sales desc) as rn
+from (
+select ProductID, Region,
+SUM(Sales) as total_sales
+from Sales.Orders
+group by ProductID, Region
+) as p;
 
 /*
 2 Fetch all employees whose salaries fall within the top 10% of their department.
